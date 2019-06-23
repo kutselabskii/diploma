@@ -468,7 +468,7 @@
 		\subsection{Структуры данных}
 			\subsubsection{PieceTreeNode}
 				\par Узел расширяющегося дерева, хранит информацию о 
-				текстовых фрагментах (См. Таблица \ref{table:PieceTreeNode}).
+				текстовых фрагментах (см. Таблица \ref{table:PieceTreeNode}).
 				\begin{table}[h]
 					\centering
 					\begin{tabular}{|l|l|p{10cm}|}
@@ -498,8 +498,9 @@
 			\subsubsection{PieceTree}
 				\par Расширяющееся дерево, узлами которого являются
 				PieceTreeNode. В нём выполняются все операции балансировки дерева, поиска,
-				вставки, удаления элементов, а так же операции undo и redo.
-				\begin{table}[h]
+				вставки, удаления элементов, а так же операции undo и redo (см. Таблица 
+				\ref{table:PieceTree}).
+				\begin{table}[H]
 					\centering
 					\begin{tabular}{|l|l|p{10cm}|}
 						\hline
@@ -512,31 +513,111 @@
 						undoStack & UndoStack & Ссылка на структуру, хранящую стек операций \\
 						\hline
 					\end{tabular}
-					\caption {Структура PieceTree}
+					\caption{Структура PieceTree}
 					\label{table:PieceTree}
 				\end{table}
 			\subsubsection{Word}
-				\par Структура для хранения информации об отдельном слове, включает в
-				себя индекс слова в массиве слов, ширину, горизонтальную позицию, нужно ли
-				вставить перенос строки перед словом
-			\subsubsection{Line{}}
-				\par Структура для хранения информации о строках текста, включает
-				общую ширину и высоту строки, номер первого слова в массиве слов, входящего в
-				строку, число слов
+				\par Структура для хранения информации об отдельном слове (см. Таблица 
+				\ref{table:Word}).
+				\begin{table}[h]
+					\centering
+					\begin{tabular}{|l|l|p{9cm}|}
+						\hline
+						TextIndex & Целое число & Позиция в массиве текстов \\
+						\hline
+						Style & Целое число & Номер стиля, применяемого к данному слову 
+						\textbf{Вычеркнуть?} \\
+						\hline
+						Start & Целое число & Номер первого символа слова в тексте \\
+						\hline
+						Length & Целое число & Длина слова \\
+						\hline
+						ForceLineBreak & Логический тип & Истинно, если перед словом стоял
+						символ переноса строки \textbf{Уточнить}\\
+						\hline
+						IsTagBegin & Логический тип & Истинно, если перед этим словом был
+						открывающий тэг \textbf{Вычеркнуть?} \\
+						\hline 
+						X & Вещественное число & Позиция в пикселях по горизонтали \\
+						\hline 
+						Width & Вещественное число & Ширина в пикселях \\
+						\hline
+						LineBreak & Логический тип & Истинно, если слово необходимо перенести
+						на следующую строку из-за soft-wrap \\
+						\hline
+						IsNbsp & Логический тип & Истинно, если слово содержит неразрывный
+						пробел \textbf{Уточнить} \\
+						\hline
+					\end{tabular}
+					\caption{Структура Word}
+					\label{table:Word}
+				\end{table}
+			\subsubsection{Line}
+				\par Структура для хранения информации о строках текста (см. Таблица 
+				\ref{table:Line}).
+				\begin{table}[H]
+					\centering
+					\begin{tabular}{|l|l|p{9cm}|}
+						\hline
+						Position & Целое число & Номер в тексте первого символа первого слова 
+						\\
+						\hline
+						Length  & Целое число & Длина строки в символах \\
+						\hline
+						StartWordIndex & Целое число & Индекс первого слова в массиве слов \\
+						\hline
+						WordCount & Целое число & Количество слов в строке \\
+						\hline
+						Width & Вещественное число & Ширина строки в пикселях \\
+						\hline
+						Height & Вещественное число & Высота строки в пикселях \\
+						\hline
+						Offset & Вещественное число & Суммарная высота предыдущих строк \\
+						\hline
+					\end{tabular}
+					\caption{Структура Line}
+					\label{table:Line}
+				\end{table}
+			\subsubsection{Command}
+				\par Вспомогательная структура данных для операций undo/redo. Хранит в себе
+				копию части дерева определенного размера, в зависимости от типа хранимой
+				команды и операции выполняет вставку копии в основное дерево или удаление
+				части основного дерева (см. Таблица \ref{table:Command}).
+				\begin{table}[h]
+					\centering
+					\begin{tabular}{|l|l|p{9cm}|}
+						\hline
+						CommandType & Перечисляемый тип & Тип команды, может быть "Insert" или 
+						"Delete" \\
+						\hline
+						Node & PieceTreeNode & Корневой узел хранимой копии дерева \\
+						\hline
+					\end{tabular}
+					\caption{Структура Command}
+					\label{table:Command}
+				\end{table}
 		\subsection{Модули и алгоритмы}
 			\subsubsection{Обработка внутреннего представления текста}
-				\par Данный модуль состоит из следующих классов:
+				\par Данный модуль состоит из следующих классов (см. Рис. 
+				\ref{diag:SubEditorScheme}):
 				\begin{itemize}
 					\item CaretPosition --- описывает положение курсора и 
 					обрабатывает его перемещение.
 					\item Selection --- хранит информацию о текущем выделении, обрабатывает его
 					изменения
 					\item UndoStack --- хранит стек обработанных операций, по запросу PieceTree 
-					сообщает необходимые данные 
+					сообщает необходимые данные \textbf{Где-то написать о принципе работы}
 					\item SubEditor --- связующее звено между модулями. Принимает команды на 
 					редактирование текста и перемещение курсора, перенаправляет их
 					соответствующим модулям
 				\end{itemize}
+				\begin{figure}[h]
+					\centering
+					\includegraphics[width=1\linewidth]{diagrams/SubEditorScheme.png}
+					\caption{Упрощенная диаграмма классов модуля обработки внутреннего представления 
+					текста}
+					\label{diag:SubEditorScheme}
+				\end{figure}
 			\subsubsection{Модуль отрисовки}
 				\par Данный модуль состоит из следующих классов:
 				\begin{itemize}
