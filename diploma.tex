@@ -27,12 +27,7 @@
 		движка. В работе изложены особенности реализации и принятые решения.
 		Выполнено сравнение производительности между предыдущей версией редактора и
 		новой реализацией.
-		% \textbf{упомянуть
-		% про сложность нахождения координат во всех системах в мире, вставить везде неймспейсы,
-		%удалить двойные строки, архитектуру системы на три слайда (вставить прошлую), окрасивить
-		%таблицу (примечания вынести), на слайд с тестированием вставить цифру со средними
-		%значениями}
-
+		% на слайд с тестированием вставить цифру со средними значениями}
 	\end{abstract}
 
 	\section{Введение}
@@ -144,6 +139,12 @@
 				визуального редактирования в движке. Также, несмотря на
 				возможность корректно отображать многострочный текст, текущая система слабо
 				приспособлена для его редактирования.
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=1\linewidth]{diagrams/CitrusTextSystem.png}
+					\caption{Упрощенная диаграмма классов текстовой системы движка Citrus}
+					\label{diag:CitrusTextSystem}
+				\end{figure}
 				\par В данный момент эти проблемы решаются обходным путём, т.е. число
 				использований многострочного редактора сведено к минимуму, а появления больших
 				объемов текста стараются, по возможности, не допускать. В игровых проектах
@@ -159,19 +160,12 @@
 				можно использовать как самостоятельную единицу в любых других проектах. Все 
 				прочие части завязаны на существующую архитектуру движка Citrus и без него 
 				неприменимы.
-				\begin{figure}[h]
-					\centering
-					\includegraphics[width=1\linewidth]{diagrams/CitrusTextSystem.png}
-					\caption{Упрощенная диаграмма классов текстовой системы движка Citrus}
-					\label{diag:CitrusTextSystem}
-				\end{figure}
 		\subsection{Неформальная постановка задачи}
 			В рамках данной работы требуется выполнить следующие задачи:
 			\begin{enumerate}
 				\item Изучить имеющиеся подходы к реализации текстовых редакторов
 				\item Создать редактор, обеспечивающий:
 				\begin{itemize}
-					\setlength{\itemindent}{-3em}
 					\item Просмотр и редактирование обычного (не стилизованного) текста
 					\item Поддержку работы с многострочными файлами
 					\item Эффективную отрисовку больших объемов текста
@@ -365,11 +359,11 @@
 				\ref{table:MethodComplexity})}
 				\begin{table}[h]
 					\centering
-					\begin{tabular}{|*{5}{p{3.2cm}|}}
+					\begin{tabular}{|p{4cm}|*{4}{p{3cm}|}}
 						\hline 
 						\textbf{Подход} & \textbf{Вставка и удаление} & 
 						\textbf{Обращение по номеру} & \textbf{Обращение по 
-						номеру строки и столбца} & \textbf{Вставка в позиции курсора}\\
+						координатам} & \textbf{Вставка в позиции курсора}\\
 						\hline
 						Массив & $O(n)$ & $O(1)$ & $O(n)$ & $O(n)$ \\
 						\hline
@@ -377,21 +371,22 @@
 						\hline
 						Связный список & $O(n)$ & $O(n)$ & $O(n)$ & $O(1)$ \\
 						\hline
-						Набор строк & $O(s + k)$, $s$ - кол-во строк, $k$ - кол-во символов в 
-						строке & $O(1)$ & $O(1)$ &  $O(k)$, $k$ - кол-во символов в строке\\
+						Набор строк & $O(s + k)$ & $O(1)$ & $O(1)$ &  $O(k)$ \\
 						\hline
-						Верёвка & $O(\log{m})$, $m$ - высота дерева &
-						$O(\log{m})$, $m$ - высота дерева & $O(n)$ & $O(\log{m})$, $m$ - высота
-						дерева \\
+						Верёвка & $O(\log{m})$ & $O(\log{m})$ & $O(n)$ & $O(\log{m})$ \\
 						\hline
-						Таблица кусочков & $O(\log{m})$, $m$ - высота дерева
-						& $O(\log{m})$, $m$ - высота дерева & $O(n)$ & 
-						$O(1)$ \\
+						Таблица кусочков & $O(\log{m})$ & $O(\log{m})$ & $O(n)$ & $O(1)$ \\
 						\hline
 					\end{tabular}
 					\caption{Сравнение алгоритмических сложностей подходов}
 					\label{table:MethodComplexity}
 				\end{table}
+				\par Здесь:
+				\begin{itemize}
+					\item $s$ --- кол-во строк 
+					\item $k$ --- кол-во символов в строке
+					\item $m$ --- высота дерева
+				\end{itemize}
 				\par К сожалению, для многих подходов трудно вывести алгоритмическую сложность
 				в среднем случае, многое зависит от ряда оговорок и условий работы. Тем не
 				менее, учитывая описанные выше особенности подходов, можно с уверенностью
@@ -701,22 +696,16 @@
 				\end{itemize}
 				\begin{figure}[h]
 					\centering
-					\includegraphics[width=1\linewidth]{diagrams/RendererScheme.png}
-					\caption{Упрощенная диаграмма классов модуля отрисовки}
+					\includegraphics[width=1\linewidth]{diagrams/EditorScheme.png}
+					\caption{Упрощенная диаграмма классов модулей отрисовки и пользовательского
+					ввода}
 					\label{diag:RendererScheme}
 				\end{figure}
 			\subsubsection{Модуль обработки пользовательского ввода}
 				\par Вся функциональность данного модуля содержится в классе Editor. Он
 				обрабатывает пользовательский ввод, перенаправляя команды в SubEditor,
 				находящийся внутри CommonText, который является полем в Editor (см. Рис. 
-				\ref{diag:EditorScheme}).
-				\begin{figure}[H]
-					\centering
-					\includegraphics[width=1\linewidth]{diagrams/EditorScheme.png}
-					\caption{Упрощенная диаграмма классов модуля обработки пользовательского
-					ввода}
-					\label{diag:EditorScheme}
-				\end{figure}
+				\ref{diag:RendererScheme}).
 			\subsubsection{Виджет прокрутки}
 				\par Поскольку существующий модуль прокрутки не позволял оптимизировать
 				отрисовку, были созданы следующие классы (см. Рис. \ref{diag:ScrollView}):
@@ -734,7 +723,7 @@
 				\end{itemize}
 				\begin{figure}[H]
 					\centering
-					\includegraphics[width=1\linewidth]{diagrams/ScrollView.png}
+					\includegraphics[width=0.7\linewidth]{diagrams/ScrollView.png}
 					\caption{Упрощенная диаграмма классов виджетов прокрутки}
 					\label{diag:ScrollView}
 				\end{figure}
@@ -779,18 +768,18 @@
 			прокрутку нового текста.
 			\begin{figure}[H]
 				\centering
-				\includegraphics[width=1\linewidth]{images/ScrollViewInt.png}
+				\includegraphics[width=0.5\linewidth]{images/ScrollViewInt.png}
 				\caption{Интерфейс Citrus с встроенным ThemedTextView}
 			\end{figure}
 			\begin{figure}[H]
 				\centering
-				\includegraphics[width=1\linewidth]{images/CommonTextInt.png}
+				\includegraphics[width=0.5\linewidth]{images/CommonTextInt.png}
 				\caption{Виджет CommonText. Включен режим подсветки 
 				границ виджета}
 			\end{figure}
 			\begin{figure}[H]
 				\centering
-				\includegraphics[width=1\linewidth]{images/EditBox.png}
+				\includegraphics[width=0.5\linewidth]{images/EditBox.png}
 				\caption{Интерфейс Citrus с встроенным Editor}
 			\end{figure}
 	\section{Реализация и тестирование}
