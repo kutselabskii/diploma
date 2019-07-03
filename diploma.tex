@@ -351,8 +351,8 @@
 			\subsubsection{Сравнение}
 				\par{Для наглядности построим сравнительную таблицу (см. Табл. 
 				\ref{table:MethodComplexity})}
-				\begin{fefutable}[H]{|p{4cm}|*{4}{p{3cm}|}}{Сравнение алгоритмических 
-					сложностей подходов\label{table:MethodComplexity}}
+				\begin{fefutable}[H]{|p{4cm}|p{2.5cm}|p{3cm}|p{3.5cm}|p{3cm}|}{Сравнение 
+					алгоритмических сложностей подходов\label{table:MethodComplexity}}
 					\hline 
 					\textbf{Подход} & \textbf{Вставка и удаление} & 
 					\textbf{Обращение по номеру} & \textbf{Обращение по 
@@ -785,8 +785,8 @@
 				\caption{Декорированный виджет CommonText}
 			\end{figure}
 	\section{Реализация и тестирование}
-		\par Объем кода: 10420 добавлений, 2291 удалений, \~149 кб (итоговый).
-		\par Число коммитов: 58
+		\par Объем кода: 10420 добавлений, 2291 удалений, $\sim$ 149 кб (итоговый).
+		\par Количество коммитов: 58
 		\par Количество автотестов: 63. Тестами покрывался модуль обработки внутреннего 
 		представления текста, уровень покрытия -- 90\%.
 		\par Репозиторий: https://github.com/mrojkov/Citrus
@@ -796,6 +796,8 @@
 			новая версия редактора в разы превосходит по скорости предыдущую, причём её 
 			производительность не деградирует при увеличении количества строк в тексте (см. 
 			Рис. \ref{img:RenderComparisonBig} и Рис. \ref{img:RenderComparisonSmall}).
+			\par Также тестирование с замерами времени выполнения проводилось для операции 
+			вставки (см. Рис. \ref{img:InsertionComparison}):
 			\begin{figure}[h]
 				\centering
 				\includegraphics[width=0.8\linewidth]{images/RenderComparisonBig.png}
@@ -803,19 +805,20 @@
 				редактора (в секундах), максимальное число строк - 50000}
 				\label{img:RenderComparisonBig}
 			\end{figure}
-			\begin{figure}[H]
+			\begin{figure}[h]
 				\centering
-				\includegraphics[width=0.8\linewidth]{images/RenderComparisonSmall.png}
+				\includegraphics[width=0.9\linewidth]{images/RenderComparisonSmall.png}
 				\caption{Сравнение времени отрисовки одного кадра в новой и старой версиях 
 				редактора (в секундах), максимальное число строк - 100}
 				\label{img:RenderComparisonSmall}
 			\end{figure}
-			\par Для операции вставки было проведено тестирование с замерами времени 
-			выполнения:
-			Операция последовательной вставки 30000 строк текста длиной 50 символов в конец
-			текста в старой версии редактора занимает, в среднем 6.8 секунд. В новой 
-			версии -- 4.3 секунды. При этом в старой версии текста, помимо прочего, после 
-			каждой вставки пересчитывается новая позиция курсора.
+			\begin{figure}[H]
+				\centering
+				\includegraphics[width=0.8\linewidth]{images/InsertionComparison.png}
+				\caption{Сравнение времени вставки символа в новой и старой версиях редактора
+				(в секундах)}
+				\label{img:InsertionComparison}
+			\end{figure}
 			\par Тестирование проводилось на ПК с ОС Windows 10 актуальной версии, CPU Intel
 			Core i5-8400.
 	\section*{Заключение}
